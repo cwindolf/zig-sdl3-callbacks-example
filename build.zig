@@ -29,7 +29,7 @@ pub fn build(b: *std.Build) void {
     // to our consumers. We must give it a name because a Zig package can expose
     // multiple modules and consumers will need to be able to specify which
     // module they want to access.
-    const mod = b.addModule("gram", .{
+    const mod = b.addModule("example", .{
         // The root source file is the "entry point" of this module. Users of
         // this module will only be able to access public declarations contained
         // in this file, which means that if you have declarations that you
@@ -60,7 +60,7 @@ pub fn build(b: *std.Build) void {
     // If neither case applies to you, feel free to delete the declaration you
     // don't need and to put everything under a single module.
     const exe = b.addExecutable(.{
-        .name = "gram",
+        .name = "example",
         .root_module = b.createModule(.{
             // b.createModule defines a new module just like b.addModule but,
             // unlike b.addModule, it does not expose the module to consumers of
@@ -75,12 +75,12 @@ pub fn build(b: *std.Build) void {
             // List of modules available for import in source files part of the
             // root module.
             .imports = &.{
-                // Here "gram" is the name you will use in your source code to
-                // import this module (e.g. `@import("gram")`). The name is
+                // Here "example" is the name you will use in your source code to
+                // import this module (e.g. `@import("example")`). The name is
                 // repeated because you are allowed to rename your imports, which
                 // can be extremely useful in case of collisions (which can happen
                 // importing modules from different packages).
-                .{ .name = "gram", .module = mod },
+                .{ .name = "example", .module = mod },
             },
         }),
     });
@@ -153,9 +153,9 @@ pub fn build(b: *std.Build) void {
     if (target.result.os.tag == .ios) {
         const ios_step = b.step("ios", "Bundle gram.app");
         const install_app_bin = b.addInstallArtifact(exe, .{
-            .dest_dir = .{ .override = .{ .custom = "gram.app" } },
+            .dest_dir = .{ .override = .{ .custom = "example.app" } },
         });
-        const install_plist = b.addInstallFile(b.path("ios/Info.plist"), "gram.app/Info.plist");
+        const install_plist = b.addInstallFile(b.path("ios/Info.plist"), "example.app/Info.plist");
         ios_step.dependOn(&install_app_bin.step);
         ios_step.dependOn(&install_plist.step);
 
@@ -165,7 +165,7 @@ pub fn build(b: *std.Build) void {
         boot.has_side_effects = true;
 
         const sim_install = b.addSystemCommand(&.{ "xcrun", "simctl", "install", sim });
-        sim_install.addDirectoryArg(.{ .relative = .{ .base = .install_prefix, .sub_path = "gram.app" } });
+        sim_install.addDirectoryArg(.{ .relative = .{ .base = .install_prefix, .sub_path = "example.app" } });
         sim_install.has_side_effects = true;
         sim_install.step.dependOn(&boot.step);
         sim_install.step.dependOn(ios_step);
