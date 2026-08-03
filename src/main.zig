@@ -56,7 +56,9 @@ export fn SDL_AppInit(appstate: ?*?*anyopaque, argc: c_int, argv: ?[*:null]?[*:0
     }
 
     std.debug.print("zig: video driver: {s}\n", .{sdl.SDL_GetCurrentVideoDriver() orelse @as([*c]const u8, "null")});
+    std.debug.print("zig: render driver: {s}\n", .{sdl.SDL_GetRendererName(renderer) orelse @as([*c]const u8, "null")});
     sdl.SDL_Log("sdl: video driver: %s", sdl.SDL_GetCurrentVideoDriver());
+    sdl.SDL_Log("render driver: %s", sdl.SDL_GetRendererName(renderer));
 
     _ = sdl.SDL_SetAppMetadata("gram", "0.0.0", "net.mostsquares.gram");
 
