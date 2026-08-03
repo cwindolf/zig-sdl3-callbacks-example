@@ -1,4 +1,5 @@
 const std = @import("std");
+const sdl_build = @import("sdl");
 
 // Although this function looks imperative, it does not perform the build
 // directly and instead it mutates the build graph (`b`) that will be then
@@ -40,6 +41,7 @@ pub fn build(b: *std.Build) void {
         // which requires us to specify a target.
         .target = target,
     });
+    sdl_build.addAppleSdkPathsToModule(b, target.result, mod);
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -83,15 +85,13 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    exe.root_module.addCMacro("SDL_MAIN_HANDLED", "1");
-
     const sdl_dep = b.dependency("sdl", .{
         .target = target,
         .optimize = optimize,
+        .main_callbacks = true,
     });
-    const sdl_lib = sdl_dep.module("sdl3");
-    // exe.root_module.linkLibrary(sdl_lib);
-    exe.root_module.addImport("sdl3", sdl_lib);
+    exe.root_module.addImport("sdl3", sdl_dep.module("sdl3"));
+    exe.root_module.linkLibrary(sdl_dep.artifact("SDL3_main"));
 
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
