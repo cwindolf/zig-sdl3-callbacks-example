@@ -22,7 +22,7 @@
     // original project's identity. Thus it is recommended to leave the comment
     // on the following line intact, so that it shows up in code reviews that
     // modify the field.
-    .fingerprint = 0x9f25eb9bedc3b9aa, // Changing this has security and trust implications.
+    .fingerprint = 0x6eec9b9f92c39346, // Changing this has security and trust implications.
     // Tracks the earliest Zig version that the package considers to be a
     // supported use case.
     .minimum_zig_version = "0.17.0-dev.1516+8a4b5424d",
@@ -33,9 +33,8 @@
     // internet connectivity.
     .dependencies = .{
         .sdl = .{
-            // .url = "git+https://github.com/cwindolf/SDL.git?ref=cw-dev#1cd7a14e759a0ce40565330ad0662ba87de4aac7",
-            // .hash = "sdl-1.0.1+3.4.x-i4QD0e2VqQCETVwDCEFRtpWwDFFkQ5wQON2lBQkdA8_j",
-            // .path = "../SDL",
+            .url = "git+https://github.com/cwindolf/SDL.git?ref=cw-dev#d7bbda82a2b55f5d7b117d2a10df706edcca42e9",
+            .hash = "sdl-1.0.1+3.4.x-i4QD0ZrGqQD94sgXRzzWDt2cu6LbQn2eCPknDdf2dt-c",
         },
     },
     .paths = .{
