@@ -150,6 +150,35 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
 
+    if (target.result.os.tag == .ios) {
+        const ios_step = b.step("ios", "Bundle gram.app");
+        const install_app_bin = b.addInstallArtifact(exe, .{
+            .dest_dir = .{ .override = .{ .custom = "gram.app" } },
+        });
+        const install_plist = b.addInstallFile(b.path("ios/Info.plist"), "gram.app/Info.plist");
+        ios_step.dependOn(&install_app_bin.step);
+        ios_step.dependOn(&install_plist.step);
+
+        const sim = b.option([]const u8, "sim", "Simulator device") orelse "iPhone 16 Pro";
+
+        const boot = b.addSystemCommand(&.{ "xcrun", "simctl", "bootstatus", sim, "-b" });
+        boot.has_side_effects = true;
+
+        const sim_install = b.addSystemCommand(&.{ "xcrun", "simctl", "install", sim });
+        sim_install.addDirectoryArg(.{ .relative = .{ .base = .install_prefix, .sub_path = "gram.app" } });
+        sim_install.has_side_effects = true;
+        sim_install.step.dependOn(&boot.step);
+        sim_install.step.dependOn(ios_step);
+
+        const launch = b.addSystemCommand(&.{
+            "xcrun", "simctl", "launch", "--console-pty", sim, "net.mostsquares.gram",
+        });
+        launch.has_side_effects = true;
+        launch.step.dependOn(&sim_install.step);
+        launch.stdio = .inherit;
+        b.step("ios-run", "Run on the iOS simulator").dependOn(&launch.step);
+    }
+
     // Just like flags, top level steps are also listed in the `--help` menu.
     //
     // The Zig build system is entirely implemented in userland, which means
