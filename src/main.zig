@@ -60,7 +60,7 @@ export fn SDL_AppInit(appstate: ?*?*anyopaque, argc: c_int, argv: ?[*:null]?[*:0
     sdl.SDL_Log("sdl: video driver: %s", sdl.SDL_GetCurrentVideoDriver());
     sdl.SDL_Log("render driver: %s", sdl.SDL_GetRendererName(renderer));
 
-    _ = sdl.SDL_SetAppMetadata("gram", "0.0.0", "net.mostsquares.gram");
+    _ = sdl.SDL_SetAppMetadata("example", "0.0.0", "net.example.example");
 
     return sdl.SDL_APP_CONTINUE;
 }

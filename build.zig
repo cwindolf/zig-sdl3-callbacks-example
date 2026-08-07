@@ -151,7 +151,7 @@ pub fn build(b: *std.Build) void {
     test_step.dependOn(&run_exe_tests.step);
 
     if (target.result.os.tag == .ios) {
-        const ios_step = b.step("ios", "Bundle gram.app");
+        const ios_step = b.step("ios", "Bundle example.app");
         const install_app_bin = b.addInstallArtifact(exe, .{
             .dest_dir = .{ .override = .{ .custom = "example.app" } },
         });
@@ -171,7 +171,7 @@ pub fn build(b: *std.Build) void {
         sim_install.step.dependOn(ios_step);
 
         const launch = b.addSystemCommand(&.{
-            "xcrun", "simctl", "launch", "--console-pty", sim, "net.mostsquares.gram",
+            "xcrun", "simctl", "launch", "--console-pty", sim, "net.example.example",
         });
         launch.has_side_effects = true;
         launch.step.dependOn(&sim_install.step);
