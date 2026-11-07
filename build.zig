@@ -41,7 +41,6 @@ pub fn build(b: *std.Build) void {
         // which requires us to specify a target.
         .target = target,
     });
-    sdl_build.addAppleSdkPathsToModule(b, target.result, mod);
 
     // Here we define an executable. An executable needs to have a root module
     // which needs to expose a `main` function. While we could add a main function
@@ -89,6 +88,9 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
         .main_callbacks = true,
+        .include_path = b.option(std.Build.LazyPath, "include_path", "SDK include dir, e.g. $(xcrun --sdk iphoneos --show-sdk-path)/usr/include or <ndk sysroot>/usr/include"),
+        .framework_path = b.option(std.Build.LazyPath, "framework_path", "SDK framework dir, e.g. $(xcrun --sdk iphoneos --show-sdk-path)/System/Library/Frameworks"),
+        .library_path = b.option(std.Build.LazyPath, "library_path", "SDK library dir, e.g. $(xcrun --sdk iphoneos --show-sdk-path)/usr/lib"),
     });
     exe.root_module.addImport("sdl3", sdl_dep.module("sdl3"));
     exe.root_module.linkLibrary(sdl_dep.artifact("SDL3_main"));
